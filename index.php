@@ -25,21 +25,21 @@ if (isset($input['entry'][0]['messaging'][0]['sender']['id'])) {
     /*initialize curl*/
     $ch = curl_init($url);
 
-    /*prepare response*/       
-    $resp = array(
-      'messaging_type' => 'RESPONSE',  
-      'recipient' => array(
-        'id' => $sender
-      ),
-      'message' => array(
-        'attachment' => array(
-            'type' => 'image',
-            'payload' => array(
-                'url' => 'https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&w=1500&q=60&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D',
-                'is_reusable' => true
+    /*prepare response*/
+    $resp     = array(
+        'messaging_type' => 'RESPONSE',
+        'recipient' => array(
+            'id' => $sender
+        ),
+        'message' => array(
+            'attachment' => array(
+                'type' => 'video',
+                'payload' => array(
+                    'url' => 'https://gcs-vimeo.akamaized.net/exp=1511793265~acl=%2A%2F796537681.mp4%2A~hmac=5f7c7efdc7e2b590d99d7aecd007628a4a8bb7d718d449b2126fa43d02e20a73/vimeo-prod-skyfire-std-us/01/324/9/226624975/796537681.mp4',
+                    'is_reusable' => true
+                )
             )
         )
-      )
     );
     $jsonData = json_encode($resp);
 
