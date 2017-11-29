@@ -13,41 +13,41 @@ if (isset($_GET['hub_verify_token'])) {
     }
 }
 
-
-/* Debug data */
-$file = fopen("logs.txt","w"); 
-fwrite($file, file_get_contents('php://input')); 
-fclose($file); 
-
-
 /* receive and send messages */
 $input = json_decode(file_get_contents('php://input'), true);
+
 if (isset($input['entry'][0]['messaging'][0]['sender']['id'])) {
 
-    $sender = $input['entry'][0]['messaging'][0]['sender']['id']; //sender facebook id
-    $message = $input['entry'][0]['messaging'][0]['message']['text']; //text that user sent
+    $sender = $input['entry'][0]['messaging'][0]['sender']['id']; //sender facebook id 
 
     $url = 'https://graph.facebook.com/v2.6/me/messages?access_token='. $access_token;
 
     /*initialize curl*/
     $ch = curl_init($url);
 
-    /*prepare response*/
-    $jsonData = '{
-    "recipient":{
-        "id":"' . $sender . '"
-        },
-        "message":{
-            "text": "OK"
-        }
-    }';
+    /*prepare response*/       
+    $resp = array(
+      'messaging_type' => 'RESPONSE',  
+      'recipient' => array(
+        'id' => $sender
+      ),
+      'message' => array(
+        'attachment' => array(
+            'type' => 'image',
+            'payload' => array(
+                'url' => 'https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&w=1500&q=60&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D',
+                'is_reusable' => true
+            )
+        )
+      )
+    );
+    $jsonData = json_encode($resp);
 
     /* curl setting to send a json post data */
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-    if (!empty($message)) {
-        $result = curl_exec($ch); // user will get the message
-    }
+
+    $result = curl_exec($ch); // user will get the message
 }
 ?>
